@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useRef, useState } from 'react';
 import { loadCaptchaEnginge, LoadCanvasTemplate, validateCaptcha } from 'react-simple-captcha';
 import loginImage from '../../../assets/others/authentication2.png'
 import { AuthContext } from '../../../Provider/AuthProvider';
+import { Helmet } from 'react-helmet-async';
 
 const Login = () => {
 
@@ -45,6 +46,9 @@ const Login = () => {
 
     return (
         <div>
+             <Helmet>
+                <title>Bestro Boss | Login</title>
+            </Helmet>
             <div className='flex justify-center min-h-screen items-center'>
                 <div>
                     <img src={loginImage} alt="" />
