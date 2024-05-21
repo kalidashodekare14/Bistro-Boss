@@ -1,18 +1,36 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import loginImage from '../../../assets/others/authentication2.png'
 import { useForm } from 'react-hook-form';
 import { Helmet } from 'react-helmet-async';
+import { AuthContext } from '../../../Provider/AuthProvider';
+import { Link } from 'react-router-dom';
 
 const SignUp = () => {
+
+    const { registerSystem, updateInfo } = useContext(AuthContext)
+
     const {
         register,
         handleSubmit,
-
         formState: { errors },
     } = useForm()
 
     const onSubmit = (data) => {
         console.log(data)
+        registerSystem(data.email, data.password)
+            .then(result => {
+                console.log(result.user)
+                updateInfo(data.name, data.photoURL)
+                    .then(result => {
+                        console.log(result.user)
+                    })
+                    .catch(error => {
+                        console.log(error.message)
+                    })
+            })
+            .catch(error => {
+                console.log(error.message)
+            })
     }
 
 
@@ -38,6 +56,18 @@ const SignUp = () => {
                                 name="name" />
                             {errors.name && <span className='text-red-500'>This field is required</span>}
                         </div>
+                        <div className=' flex space-y-2 flex-col justify-center'>
+                            <label htmlFor="">Name:</label>
+                            <input
+                                {...register("photoURL",
+                                    { required: true })}
+                                className=' input input-bordered'
+                                placeholder='Enter PhotoURL'
+                                type="text"
+                            />
+                            {errors.photoURL && <span className='text-red-500'>This field is required</span>}
+                        </div>
+
                         <div className=' flex space-y-2 flex-col justify-center'>
                             <label htmlFor="">Email:</label>
                             <input {...register("email",
@@ -75,6 +105,11 @@ const SignUp = () => {
                         </div>
                         <input className='btn w-full' type="submit" value="Sign Up" />
                     </form>
+                    <span>Please
+                        <Link to="/login" className='text-blue-500'>
+                            Login
+                        </Link>
+                    </span>
                 </div>
             </div>
         </div>

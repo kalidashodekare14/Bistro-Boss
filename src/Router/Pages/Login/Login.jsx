@@ -1,14 +1,19 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { loadCaptchaEnginge, LoadCanvasTemplate, validateCaptcha } from 'react-simple-captcha';
 import loginImage from '../../../assets/others/authentication2.png'
 import { AuthContext } from '../../../Provider/AuthProvider';
 import { Helmet } from 'react-helmet-async';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 
 const Login = () => {
 
-    const captchaRef = useRef(null)
     const [disabled, setDisabled] = useState(true)
-    const {loginSystem} = useContext(AuthContext)
+    const { loginSystem } = useContext(AuthContext)
+    const navigate = useNavigate()
+    const location = useLocation()
+
+    const from = location.state?.from?.pathname || "/"
 
     useEffect(() => {
         loadCaptchaEnginge(6);
@@ -23,18 +28,27 @@ const Login = () => {
         const password = form.password.value
         // console.log(email, password)
         loginSystem(email, password)
-        .then(result =>{
-            console.log(result.user)
-        })
-        .catch(error =>{
-            console.log(error.message)
-        })
+            .then(result => {
+                console.log(result.user)
+                Swal.fire({
+                    position: "center",
+                    icon: "success",
+                    title: "Your Loggin Successfully",
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+
+                navigate(from, { replace: true })
+            })
+            .catch(error => {
+                console.log(error.message)
+            })
     }
-    
 
 
-    const handleValidate = () => {
-        const user_captcha_value = captchaRef.current.value
+
+    const handleValidate = e => {
+        const user_captcha_value = e.target.value
 
         if (validateCaptcha(user_captcha_value)) {
             setDisabled(false)
@@ -46,7 +60,7 @@ const Login = () => {
 
     return (
         <div>
-             <Helmet>
+            <Helmet>
                 <title>Bestro Boss | Login</title>
             </Helmet>
             <div className='flex justify-center min-h-screen items-center'>
@@ -63,8 +77,8 @@ const Login = () => {
                             <LoadCanvasTemplate />
                         </div>
                         <div>
-                            <input ref={captchaRef} placeholder='Type Here' className='w-full input input-bordered' type="captcha" />
-                            <button onClick={handleValidate} className='btn btn-xs bt-outline mt-2 w-full'>Validate</button>
+                            <input onBlur={handleValidate} placeholder='Type Here' className='w-full input input-bordered' type="captcha" />
+                            <button className='btn btn-xs bt-outline mt-2 w-full'>Validate</button>
                         </div>
                         <div className='flex space-y-2 flex-col justify-center'>
                             <label htmlFor="">Password:</label>
@@ -72,6 +86,11 @@ const Login = () => {
                         </div>
                         <input disabled={disabled} className='btn w-full' type="submit" value="Login" />
                     </form>
+                    <span>Please
+                        <Link to="/register" className='text-blue-500'>
+                            SingUp
+                        </Link>
+                    </span>
                 </div>
             </div>
         </div>
