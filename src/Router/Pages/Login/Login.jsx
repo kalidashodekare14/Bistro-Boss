@@ -14,6 +14,7 @@ const Login = () => {
     const location = useLocation()
 
     const from = location.state?.from?.pathname || "/"
+    console.log('kaj hocce', from)
 
     useEffect(() => {
         loadCaptchaEnginge(6);
@@ -73,16 +74,15 @@ const Login = () => {
                             <label htmlFor="">Email:</label>
                             <input className=' input input-bordered' placeholder='Enter Email' type="email" name="email" />
                         </div>
+                        <div className='flex space-y-2 flex-col justify-center'>
+                            <label htmlFor="">Password:</label>
+                            <input className='input input-bordered' placeholder='Enter your password' type="password" name="password" />
+                        </div>
                         <div className='border p-3 rounded-lg'>
                             <LoadCanvasTemplate />
                         </div>
                         <div>
                             <input onBlur={handleValidate} placeholder='Type Here' className='w-full input input-bordered' type="captcha" />
-                            <button className='btn btn-xs bt-outline mt-2 w-full'>Validate</button>
-                        </div>
-                        <div className='flex space-y-2 flex-col justify-center'>
-                            <label htmlFor="">Password:</label>
-                            <input className='input input-bordered' placeholder='Enter your password' type="password" name="password" />
                         </div>
                         <input disabled={disabled} className='btn w-full' type="submit" value="Login" />
                     </form>
