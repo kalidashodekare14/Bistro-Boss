@@ -5,6 +5,7 @@ import { AuthContext } from '../../../Provider/AuthProvider';
 import { Helmet } from 'react-helmet-async';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
+import SocialLogin from '../../../Components/SocialLogin/SocialLogin';
 
 const Login = () => {
 
@@ -86,6 +87,9 @@ const Login = () => {
                         </div>
                         <input disabled={disabled} className='btn w-full' type="submit" value="Login" />
                     </form>
+                    <div className='text-center '>
+                        <SocialLogin></SocialLogin>
+                    </div>
                     <span>Please
                         <Link to="/register" className='text-blue-500'>
                             SingUp

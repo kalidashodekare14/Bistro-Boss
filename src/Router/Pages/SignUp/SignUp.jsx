@@ -3,11 +3,17 @@ import loginImage from '../../../assets/others/authentication2.png'
 import { useForm } from 'react-hook-form';
 import { Helmet } from 'react-helmet-async';
 import { AuthContext } from '../../../Provider/AuthProvider';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import UseAxiosPublic from '../../../Hooks/UseAxiosPublic';
+import Swal from 'sweetalert2';
+import SocialLogin from '../../../Components/SocialLogin/SocialLogin';
+
 
 const SignUp = () => {
 
     const { registerSystem, updateInfo } = useContext(AuthContext)
+    const axiosPublic = UseAxiosPublic()
+    const navigate = useNavigate()
 
     const {
         register,
@@ -22,6 +28,24 @@ const SignUp = () => {
                 console.log(result.user)
                 updateInfo(data.name, data.photoURL)
                     .then(result => {
+                        const userInfo = {
+                            name: data.name,
+                            email: data.email
+                        }
+                        axiosPublic.post('/users', userInfo)
+                            .then(res => {
+                                if (res.data.insertedId) {
+                                    Swal.fire({
+                                        position: "center",
+                                        icon: "success",
+                                        title: "Your Register Successfuly",
+                                        showConfirmButton: false,
+                                        timer: 1500
+                                    });
+                                    navigate('/')
+                                }
+                            })
+
                         console.log(result.user)
                     })
                     .catch(error => {
@@ -105,6 +129,10 @@ const SignUp = () => {
                         </div>
                         <input className='btn w-full' type="submit" value="Sign Up" />
                     </form>
+                    <div className="divider">OR</div>
+                    <div className='text-center '>
+                        <SocialLogin></SocialLogin>
+                    </div>
                     <span>Please
                         <Link to="/login" className='text-blue-500'>
                             Login
